@@ -5,10 +5,10 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <assert.h>
-
-#define NUM_TRIALS 1000
+#include <stdint.h>
 
 float birthday_paradox(int);
+const float NUM_TRIALS = 1000.0;
 
 int main(int argc, char* argv[]){
 	
@@ -43,6 +43,7 @@ int main(int argc, char* argv[]){
 
 	printf("Input file = %s\n", in_file);
 	printf("Output file = %s\n", out_file);
+	printf("Number of Trials = %f\n", NUM_TRIALS);
 
 	in_f = fopen(in_file, "r");
 	if( in_f == NULL){
@@ -59,8 +60,8 @@ int main(int argc, char* argv[]){
 	while((fscanf(in_f, "%d", &N_people)) > 0){
 		printf("Number of people: %d\n", N_people);
 		probability = birthday_paradox(N_people);
-		printf("\tprobability = %f\n", probability);
-		fprintf(out_f, "%f\n", probability);
+		printf("\tprobability = %.2f\n", probability);
+		fprintf(out_f, "%.2f\n", probability);
 	}	
 
 	fclose(in_f);
@@ -73,47 +74,40 @@ float birthday_paradox(int N_people){
 	int gen, i, j, k;	
 	int gen_buff[N_people];
 	float pos = 0;
-	int match = 0;	
+	uint8_t match = 0;	
 	float probability = 0.0;
-	time_t t;
+	
+	srand(getpid() % N_people);
+
+	printf("pid = %i\n", getpid());
 	
 	// Perform NUM_TRIALS (1000)
-	for(i = 0; i < NUM_TRIALS; i++){
+	for(i = 0; i < 1000; i++){
 		match = 0;
 		j = 0;
-		srand((unsigned) time(&t));
 
-		// For each person, generate a random number and compare it to previously generated
-		// numbers.
-		while(j < N_people && !match){
+		while((j < N_people) && (!match)){
+			k = 0;
+			
 			
 			gen = (rand() % 365) + 1;
-
-			// If there is a match, increment the positive counter and exit loop (set
-			// match to 1);
-			k = 0;
-			while(k < j && !match){
+			
+			//printf("%i\n", gen);
+			while((k < j) && (!match)){
 				if(gen_buff[k] == gen){
 					match = 1;
-					printf("MATCH %i == %i\n", gen, gen_buff[k]);
+					pos = pos + 1;
 				}
 				k++;
 			}
 			gen_buff[j] = gen;
 			j++;
 		}
-		if(match == 1){
-			pos++;
-		}		
-	}
-	
-	for(i = 0; i < 1000; i++){
-		printf("%i\n", gen_buff[i]);
 	}
 	
 	printf("Positive = %f\n", pos); 
 
-	probability = pos / (float) NUM_TRIALS;	
+	probability = pos / NUM_TRIALS;	
 
 	return probability;
 }
