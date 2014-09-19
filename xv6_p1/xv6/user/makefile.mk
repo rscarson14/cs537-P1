@@ -2,6 +2,7 @@
 # user programs
 USER_PROGS := \
 	cat\
+	counttest\
 	echo\
 	forktest\
 	grep\

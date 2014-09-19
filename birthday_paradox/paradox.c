@@ -27,11 +27,11 @@ int main(int argc, char* argv[]){
 	while((c = getopt(argc, argv, "i:o:")) != -1){
 		switch(c){
 			case 'i':
-				printf("arg i = %s\n", optarg);
+				//printf("arg i = %s\n", optarg);
 				in_file = optarg;
 				break;
 			case 'o':
-				printf("arg o = %s\n", optarg);
+				//printf("arg o = %s\n", optarg);
 				out_file = optarg;
 				break;
 			default:
@@ -40,10 +40,6 @@ int main(int argc, char* argv[]){
 				break;
 		}
 	}
-
-	printf("Input file = %s\n", in_file);
-	printf("Output file = %s\n", out_file);
-	printf("Number of Trials = %f\n", NUM_TRIALS);
 
 	in_f = fopen(in_file, "r");
 	if( in_f == NULL){
@@ -58,9 +54,7 @@ int main(int argc, char* argv[]){
 	}
 
 	while((fscanf(in_f, "%d", &N_people)) > 0){
-		printf("Number of people: %d\n", N_people);
 		probability = birthday_paradox(N_people);
-		printf("\tprobability = %.2f\n", probability);
 		fprintf(out_f, "%.2f\n", probability);
 	}	
 
@@ -78,8 +72,6 @@ float birthday_paradox(int N_people){
 	float probability = 0.0;
 	
 	srand(getpid() % N_people);
-
-	printf("pid = %i\n", getpid());
 	
 	// Perform NUM_TRIALS (1000)
 	for(i = 0; i < 1000; i++){
@@ -104,8 +96,6 @@ float birthday_paradox(int N_people){
 			j++;
 		}
 	}
-	
-	printf("Positive = %f\n", pos); 
 
 	probability = pos / NUM_TRIALS;	
 
